@@ -1,0 +1,27 @@
+services:
+    mongo:
+        image: mongo:6.0
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=mongo_admin
+            - MONGO_INITDB_ROOT_PASSWORD=password
+        volumes:
+            - mongo_data:/data/db
+        ports:
+            - "27017:27017"
+        restart: unless-stopped
+
+    api:
+        build: .
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=mongo_admin
+            - MONGO_INITDB_ROOT_PASSWORD=password
+        ports:
+            - "5000:5000"
+        depends_on:
+            - mongo
+        volumes:
+            - .:/app
+        restart: unless-stopped
+
+volumes:
+    mongo_data:
